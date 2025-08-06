@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EDUBOT - AI School Admission Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #6a0dad;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.5em;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select, button, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 1em;
+    }
+
+    button {
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #5a009d;
+    }
+
+    .chatbot {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 8px;
+      min-height: 120px;
+      margin-top: 10px;
+    }
+
+    ul.school-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul.school-list li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .voice-button {
+      margin-top: 10px;
+      background-color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+
+<header>🎓 EDUBOT - AI-Powered School Admission Assistant</header>
+
+<div class="container">
+
+  <div class="section">
+    <label>Select Language:</label>
+    <select id="language">
+      <option>English</option>
+      <option>Tamil</option>
+      <option>Hindi</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <label>Enter Your Query:</label>
+    <input type="text" id="userQuery" placeholder="e.g., Find schools near Salem for 10th standard">
+    <button onclick="sendQuery()">Ask EDUBOT</button>
+    <button class="voice-button" onclick="startVoice()">🎤 Speak</button>
+    <div class="chatbot" id="chatbot">
+      <p><strong>EDUBOT:</strong> Hello! I can help you find the best schools in your area.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <label>Search by Class and Location:</label>
+    <input type="text" id="searchClass" placeholder="Enter Class (e.g., 6th)">
+    <input type="text" id="searchLocation" placeholder="Enter Location (e.g., Erode)">
+    <button onclick="filterSchools()">Search</button>
+  </div>
+
+  <div class="section">
+    <h3>📚 Recommended Schools</h3>
+    <ul class="school-list" id="schoolList">
+      <li data-class="10" data-location="Salem"><strong>Govt High School, Salem</strong> - Tamil Medium - State Board</li>
+      <li data-class="6" data-location="Erode"><strong>Sunrise Matric School, Erode</strong> - English Medium - Matric</li>
+      <li data-class="8" data-location="Namakkal"><strong>Sarvodaya Vidyalaya, Namakkal</strong> - CBSE - Hindi Medium</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3>📤 Upload Admission Form</h3>
+    <input type="file" id="formUpload">
+    <button onclick="uploadForm()">Upload</button>
+  </div>
+
+  <div class="section">
+    <h3>📞 Contact Support</h3>
+    <p>If you face any issues, contact our helpline: <strong>1800-123-EDUBOT</strong></p>
+  </div>
+
+</div>
+
+<script>
+  function sendQuery() {
+    const query = document.getElementById("userQuery").value;
+    const chatbot = document.getElementById("chatbot");
+    const response = `<p><strong>You:</strong> ${query}</p>
+                      <p><strong>EDUBOT:</strong> Searching schools related to "${query}"...<br>Here are a few suggestions!</p>`;
+    chatbot.innerHTML += response;
+  }
+
+  function filterSchools() {
+    const cls = document.getElementById("searchClass").value.toLowerCase();
+    const loc = document.getElementById("searchLocation").value.toLowerCase();
+    const schools = document.querySelectorAll("#schoolList li");
+
+    schools.forEach(li => {
+      const schoolClass = li.dataset.class;
+      const location = li.dataset.location.toLowerCase();
+      if ((cls === "" || schoolClass === cls) && (loc === "" || location.includes(loc))) {
+        li.style.display = "block";
+      } else {
+        li.style.display = "none";
+      }
+    });
+  }
+
+  function uploadForm() {
+    const fileInput = document.getElementById("formUpload");
+    if (fileInput.files.length === 0) {
+      alert("Please select a file first!");
+    } else {
+      alert("Form uploaded successfully (simulated).");
+    }
+  }
+
+  function startVoice() {
+    if ('webkitSpeechRecognition' in window) {
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = 'en-IN';
+      recognition.start();
+
+      recognition.onresult = function (event) {
+        const result = event.results[0][0].transcript;
+        document.getElementById("userQuery").value = result;
+        sendQuery();
+      };
+    } else {
+      alert("Voice recognition not supported in this browser.");
+    }
+  }
+</script>
+
+</body>
+</html>
