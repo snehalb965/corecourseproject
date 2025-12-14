@@ -1,1 +1,1 @@
-# corecourseproject
+# EDUBOT
